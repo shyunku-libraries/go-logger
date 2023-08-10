@@ -1,8 +1,12 @@
 package log
 
 var (
-	globalLogger = newBaseLoggerWithoutLabel()
+	globalLogger = newLoggerWithoutLabel()
 )
+
+func GetLogger() *Logger {
+	return &globalLogger
+}
 
 func SetLabel(label string) {
 	globalLogger.label = label

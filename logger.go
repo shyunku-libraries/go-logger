@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type logger struct {
+type Logger struct {
 	label  string
 	config loggerConfig
 }
@@ -30,20 +30,20 @@ func defaultLoggerConfig() loggerConfig {
 	}
 }
 
-func newLogger(label string) logger {
-	l := new(logger)
+func newLogger(label string) Logger {
+	l := new(Logger)
 	l.label = label
 	l.config = defaultLoggerConfig()
 	return *l
 }
 
-func newBaseLoggerWithoutLabel() logger {
-	l := new(logger)
+func newLoggerWithoutLabel() Logger {
+	l := new(Logger)
 	l.config = defaultLoggerConfig()
 	return *l
 }
 
-func (l *logger) write(p []byte) (n int, err error) {
+func (l *Logger) write(p []byte) (n int, err error) {
 	str := string(p[:])
 	reg := regexp.MustCompile(`(\n\n+)|(\s+)$`)
 	str = reg.ReplaceAllString(str, "")
@@ -52,55 +52,55 @@ func (l *logger) write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func (l *logger) Test(args ...any) {
+func (l *Logger) Test(args ...any) {
 	l.preComposeLog(TEST, PrettyMarshal, false, args...)
 }
 
-func (l *logger) Debug(args ...any) {
+func (l *Logger) Debug(args ...any) {
 	l.preComposeLog(DEBUG, PrettyMarshal, false, args...)
 }
 
-func (l *logger) Info(args ...any) {
+func (l *Logger) Info(args ...any) {
 	l.preComposeLog(INFO, Marshal, false, args...)
 }
 
-func (l *logger) Warn(args ...any) {
+func (l *Logger) Warn(args ...any) {
 	l.preComposeLog(WARN, Marshal, false, args...)
 }
 
-func (l *logger) Error(args ...any) {
+func (l *Logger) Error(args ...any) {
 	l.preComposeLog(ERROR, Marshal, false, args...)
 }
 
-func (l *logger) Fatal(args ...any) {
+func (l *Logger) Fatal(args ...any) {
 	l.preComposeLog(FATAL, Marshal, false, args...)
 }
 
-func (l *logger) Testf(format string, args ...any) {
+func (l *Logger) Testf(format string, args ...any) {
 	l.preComposeLog(TEST, PrettyMarshal, true, format, args)
 }
 
-func (l *logger) Debugf(format string, args ...any) {
+func (l *Logger) Debugf(format string, args ...any) {
 	l.preComposeLog(DEBUG, PrettyMarshal, true, format, args)
 }
 
-func (l *logger) Infof(format string, args ...any) {
+func (l *Logger) Infof(format string, args ...any) {
 	l.preComposeLog(INFO, Marshal, true, format, args)
 }
 
-func (l *logger) Warnf(format string, args ...any) {
+func (l *Logger) Warnf(format string, args ...any) {
 	l.preComposeLog(WARN, Marshal, true, format, args)
 }
 
-func (l *logger) Errorf(format string, args ...any) {
+func (l *Logger) Errorf(format string, args ...any) {
 	l.preComposeLog(ERROR, Marshal, true, format, args)
 }
 
-func (l *logger) Fatalf(format string, args ...any) {
+func (l *Logger) Fatalf(format string, args ...any) {
 	l.preComposeLog(FATAL, Marshal, true, format, args)
 }
 
-func (l *logger) preComposeLog(level Level, marshalFunc MarshalFunc, isFormatMode bool, args ...any) {
+func (l *Logger) preComposeLog(level Level, marshalFunc MarshalFunc, isFormatMode bool, args ...any) {
 	if isFormatMode {
 		format := args[0].(string)
 		newArgs := args[1].([]any)
@@ -111,7 +111,7 @@ func (l *logger) preComposeLog(level Level, marshalFunc MarshalFunc, isFormatMod
 	}
 }
 
-func (l *logger) composeLog(level Level, marshalFunc MarshalFunc, contents []any) {
+func (l *Logger) composeLog(level Level, marshalFunc MarshalFunc, contents []any) {
 	// Context Tag
 	label := l.label
 	if label == "" {
@@ -148,7 +148,7 @@ func (l *logger) composeLog(level Level, marshalFunc MarshalFunc, contents []any
 	println(builtSeg)
 }
 
-func (l *logger) buildLog(segments []string, contents []any, marshalFunc MarshalFunc) string {
+func (l *Logger) buildLog(segments []string, contents []any, marshalFunc MarshalFunc) string {
 	stringBuilder := NewStringBuilder()
 	stringBuilder.SetMarshaller(marshalFunc)
 
@@ -163,7 +163,7 @@ func (l *logger) buildLog(segments []string, contents []any, marshalFunc Marshal
 	return stringBuilder.Build()
 }
 
-func (l *logger) getCallStackSegment(stack int) string {
+func (l *Logger) getCallStackSegment(stack int) string {
 	pcs := make([]uintptr, 10)
 	n := runtime.Callers(6, pcs)
 	pcs = pcs[:n]
@@ -200,7 +200,7 @@ func (l *logger) getCallStackSegment(stack int) string {
 	return strings.Join(callStackSegments, ".")
 }
 
-func (l *logger) reverseFrameSlice(slice []runtime.Frame) []runtime.Frame {
+func (l *Logger) reverseFrameSlice(slice []runtime.Frame) []runtime.Frame {
 	var reversed []runtime.Frame
 	sliceLen := len(slice)
 	for i := 0; i < sliceLen; i++ {
