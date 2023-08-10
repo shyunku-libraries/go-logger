@@ -1,3 +1,3 @@
-module github.com/shyunku/go-logger
+module github.com/shyunku-libraries/go-logger
 
 go 1.19
