@@ -31,3 +31,6 @@ func main() {
 }
 ```
 
+### Output
+
+<img src="./img1.png"/>
