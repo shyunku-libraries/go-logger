@@ -43,7 +43,7 @@ func newLoggerWithoutLabel() Logger {
 	return *l
 }
 
-func (l *Logger) write(p []byte) (n int, err error) {
+func (l *Logger) Write(p []byte) (n int, err error) {
 	str := string(p[:])
 	reg := regexp.MustCompile(`(\n\n+)|(\s+)$`)
 	str = reg.ReplaceAllString(str, "")
