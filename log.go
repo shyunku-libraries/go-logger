@@ -4,6 +4,10 @@ var (
 	globalLogger = newBaseLoggerWithoutLabel()
 )
 
+func SetLabel(label string) {
+	globalLogger.label = label
+}
+
 func Test(args ...any) {
 	globalLogger.Test(args...)
 }
