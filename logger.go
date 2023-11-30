@@ -145,7 +145,7 @@ func (l *Logger) composeLog(level Level, marshalFunc MarshalFunc, contents []any
 
 	// Build String
 	builtSeg := l.buildLog([]string{contextSeg, timeSeg, levelSeg, callStackSeg, ":"}, contents, marshalFunc)
-	println(builtSeg)
+	fmt.Println(builtSeg)
 }
 
 func (l *Logger) buildLog(segments []string, contents []any, marshalFunc MarshalFunc) string {
